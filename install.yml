@@ -1,0 +1,21 @@
+---
+- name: melcma.nodejs Add Node apt key
+  become: yes
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: melcma.nodejs Add NodeSource repositories for Node.js.
+  become: yes
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - "deb https://deb.nodesource.com/node_{{ version }}.x {{ ansible_distribution_release }} main"
+    - "deb-src https://deb.nodesource.com/node_{{ version }}.x {{ ansible_distribution_release }} main"
+
+- name: melcma.nodejs Install Node.js
+  become: yes
+  apt:
+    name: nodejs
+    state: present

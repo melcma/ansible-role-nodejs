@@ -1,0 +1,8 @@
+---
+- name: melcma.nodejs Make folder for npm global packages
+  file:
+    path: ~/.local
+    state: directory
+
+- name: melcma.nodejs Config npm to use new directory
+  shell: npm config set prefix '~/.local'

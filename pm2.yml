@@ -1,0 +1,16 @@
+---
+- name: melcma.nodejs Register running pm2 processes
+  command: ~/.local/bin/pm2 list
+  register: pm2_list
+
+- name: melcma.nodejs Start pm2 processes
+  command: ~/.local/bin/pm2 start /var/www/{{ item.key }}/{{ item.value.start }} --name="{{ item.key }}"
+  environment:
+    PORT: "{{ item.value.port }}"
+  with_dict: "{{ applications }}"
+  when: item.value.start is defined and pm2_list.stdout.find(item.key) == -1
+
+- name: melcma.nodejs Restart pm2 processes
+  command: ~/.local/bin/pm2 restart /var/www/{{ item.key }}/{{ item.value.start }}
+  with_dict: "{{ applications }}"
+  when: item.value.start is defined and pm2_list.stdout.find(item.key) != -1

@@ -1,0 +1,13 @@
+---
+- name: melcma.nodejs Install npm dependencies
+  npm:
+    path: /var/www/{{ item.key }}
+    state: present
+  with_dict: "{{ applications }}"
+  when: item.value.npm == true
+
+- name: melcma.nodejs Install npm global modules
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items: "{{ packages }}"
